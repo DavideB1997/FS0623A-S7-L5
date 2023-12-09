@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+// Include any default variable overrides here (though functions won't be available)
+@import "bootstrap/scss/bootstrap";
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "stylesheets/abstracts/variables";
+@import "stylesheets/abstracts/functions";
+@import "stylesheets/abstracts/mixins";
+
+
+// 4. Include any default map overrides here
+@import "stylesheets/base/base";
+@import "stylesheets/base/fonts";
+@import "stylesheets/base/typography";
+@import "stylesheets/base/helpers";
+
+
+// 6. Optionally include any other parts as needed
+@import "stylesheets/vendors/normalize";
+
+
+// 4. Layout-related sections
+@import "stylesheets/layout/header";
+@import "stylesheets/layout/footer";
+
+// 5. Components
+@import "stylesheets/components/button";
+
+// 6. Page-specific styles
+@import "stylesheets/pages/home";
+
+// 7. Themes
+@import "stylesheets/themes/default";
