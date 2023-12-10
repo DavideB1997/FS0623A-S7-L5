@@ -1,4 +1,6 @@
 if (window.location.href.endsWith("index.html")) {
+	localStorage.removeItem("selectedItem");
+
 	fetch("https://striveschool-api.herokuapp.com/api/product/", {
 		headers: {
 			Authorization:
@@ -12,45 +14,56 @@ if (window.location.href.endsWith("index.html")) {
 		.catch((err) => console.error(err.message));
 }
 
+if (window.location.href.endsWith("productPg.html")) {
+	if (localStorage.getItem("selectedItem")) {
+		displayProductPage();
+	} else {
+		window.location = "index.html";
+	}
+}
+
 function displayItems(items) {
 	items.forEach((item) => {
 		console.log(item);
-		itemWrapper.innerHTML += `
-					<div class="card my-1" style="width: 18rem">
-						<img src="${item.imageUrl}" class="card-img-top" alt="..." />
-						<div class="card-body">
-							<h5 class="card-title">"${item.name}"</h5>
-              <div class="row justify-content-evenly">
-                <p class="card-text">
-					  			"${item.description}"
-						    </p>
-                <p class="card-text">
-							  	prezzo : "${item.price}" $
-							  </p>
-              </div>
-							
-							<div class="row justify-content-evenly ">
-								<a href="#" id="discoverBtn" class="col-5 btn btn-primary d-inline-block">Scopri</a>
-								<a href="#" class="col-5 btn btn-primary d-inline-block">Modifica</a>
-							</div>
-						</div>
-				</div> `;
-	});
-	buttons();
-}
 
-function buttons(item) {
-	let discoverBtn = document.querySelector("#discoverBtn");
+		// Create a card element
+		const card = document.createElement("div");
+		card.classList.add("card", "my-1");
+		card.style.width = "18rem";
+		card.innerHTML = `
+      <img src="${item.imageUrl}" class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title">${item.name}</h5>
+        <div class="row justify-content-evenly">
+          <p class="card-text">${item.description}</p>
+          <p class="card-text">prezzo : ${item.price} $</p>
+        </div>
+        <div class="row justify-content-evenly">
+          <a href="productPg.html" class="discoverBtn col-5 btn btn-primary d-inline-block">Scopri</a>
+          <a href="modifica.html" class="modifyBtn col-5 btn btn-primary d-inline-block">Modifica</a>
+        </div>
+      </div>`;
 
-	discoverBtn.addEventListener("click", () => {
-		window.location = "productPg.html";
-		displayProductPage(item);
+		itemWrapper.appendChild(card);
+
+		addOnclick(item, card.querySelector(".discoverBtn"), "productPg.html");
+		addOnclick(item, card.querySelector(".modifyBtn"), "modifica.html");
 	});
 }
 
-let productWrapper = document.querySelector("#productWrapper");
+function addOnclick(item, button, page) {
+	button.addEventListener("click", (event) => {
+		event.preventDefault();
 
-function displayProductPage(item) {
+		localStorage.setItem("selectedItem", JSON.stringify(item));
+		window.location.href = page;
+	});
+}
+
+function displayProductPage() {
+	let item = JSON.parse(localStorage.getItem("selectedItem"));
+	let productWrapper = document.querySelector("#productWrapper");
+
 	productWrapper.innerHTML += ` 
   <div class="card mb-3">
   <img src="${item.imageUrl}" class="card-img-top" alt="...">
@@ -58,6 +71,11 @@ function displayProductPage(item) {
     <h5 class="card-title">"${item.name}"</h5>
     <p class="card-text">"${item.description}"</p>
     <p class="card-text">"${item.price}"</p>
+    
+    <a href="modifica.html" class="col-5 btn btn-primary d-inline-block">Modifica</a>
+    <div class="row">
+          
+    </div>
   </div>
-</div>`;
+ `;
 }
